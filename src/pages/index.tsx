@@ -22,9 +22,11 @@ interface HomeProps {
 export default function Home({ products }: HomeProps) {
   const [sliderRef] = useKeenSlider({
     slides: {
-      perView: 3,
+      // origin: "center",
+      perView: 1.8045,
       spacing: 48
-    }
+    },
+    mode: "free-snap"
   })
 
   return (
