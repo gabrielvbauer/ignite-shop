@@ -7,6 +7,7 @@ import logoImg from '../assets/logo.svg';
 import { Container, Header } from "../styles/pages/app";
 
 import 'react-toastify/dist/ReactToastify.css';
+import { Sidebar } from "../components/Sidebar"
 
 globalStyles()
 
@@ -15,6 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <Container>
       <Header>
         <Image src={logoImg} alt="" />
+
+        <Sidebar />
       </Header>
 
       <Component {...pageProps} />

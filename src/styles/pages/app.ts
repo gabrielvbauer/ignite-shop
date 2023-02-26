@@ -13,4 +13,18 @@ export const Header = styled('header', {
   width: '100%',
   maxWidth: 1180,
   margin: '0 auto',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+
+  button: {
+    width: 48,
+    height: 48,
+    borderRadius: 6,
+    backgroundColor: '$gray800',
+    color: '$gray500',
+    border: 'none',
+    cursor: 'pointer',
+  }
 })
