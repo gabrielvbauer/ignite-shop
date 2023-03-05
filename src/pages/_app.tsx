@@ -8,21 +8,24 @@ import { Container, Header } from "../styles/pages/app";
 
 import 'react-toastify/dist/ReactToastify.css';
 import { Sidebar } from "../components/Sidebar"
+import { ShoppingCartContextProvider } from "../context/ShoppinCartContext";
 
 globalStyles()
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Container>
-      <Header>
-        <Image src={logoImg} alt="" />
+    <ShoppingCartContextProvider>
+      <Container>
+        <Header>
+          <Image src={logoImg} alt="" />
 
-        <Sidebar />
-      </Header>
+          <Sidebar />
+        </Header>
 
-      <Component {...pageProps} />
+        <Component {...pageProps} />
 
-      <ToastContainer />
-    </Container>
+        <ToastContainer />
+      </Container>
+    </ShoppingCartContextProvider>
   )
 }

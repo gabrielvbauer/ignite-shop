@@ -6,43 +6,32 @@ import Stripe from "stripe";
 import { toast } from 'react-toastify'
 import { stripe } from "../../lib/stripe";
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Head from "next/head";
+import { ShoppingCartContext } from "../../context/ShoppinCartContext";
 
-interface ProductProps {
+export interface ProductProps {
   product: {
     id: string
     name: string
     description: string
     imageUrl: string
-    price: string
+    price: number
+    priceFormatted: string
     defaultPriceId: string
   }
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
   const { isFallback } = useRouter()
+  const { addProductToCart } = useContext(ShoppingCartContext)
 
-  async function handleBuyProduct() {
-    setIsCreatingCheckoutSession(true)
-
-    try {
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId
-      })
-
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      toast('Falha ao conectar ao checkout', {
-        type: "error",
-        theme: "dark"
-      })
-
-      setIsCreatingCheckoutSession(false)
-    }
+  async function handleAddItemToCart() {
+    addProductToCart({
+      cartItemId: `${product.id}-${new Date().toISOString()}`,
+      product: product
+    })
+    toast('Produto adicionado à sacola', {type: "success", theme: "dark"})
   }
 
   if (isFallback) {}
@@ -60,11 +49,11 @@ export default function Product({ product }: ProductProps) {
 
         <ProductDetails>
           <h1>{product.name}</h1>
-          <span>{product.price}</span>
+          <span>{product.priceFormatted}</span>
 
           <p>{product.description}</p>
 
-          <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
+          <button onClick={handleAddItemToCart}>
             Colocar na sacola
           </button>
         </ProductDetails>
@@ -96,7 +85,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
         name: product.name,
         description: product.description,
         imageUrl: product.images[0],
-        price: new Intl.NumberFormat('pt-BR', {
+        price: price.unit_amount,
+        priceFormatted: new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }).format(price.unit_amount / 100),
